@@ -9,10 +9,10 @@ function LibraryViewEvents() {
     // const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
     // const isLibraryLoggedin = localStorage.getItem("liblogin") === 'true'
     const isUserLoggedIn = localStorage.getItem("userlogin") === 'true'
-    const isAdminLogged = localStorage.getItem("isAdminLoggedIn")==="true"
+    const isAdminLogged = localStorage.getItem("isAdminLoggedIn") === "true"
 
     useEffect(() => {
-        axios.get('http://localhost:4059/viewall/events')
+        axios.get(`${import.meta.env.VITE_API_URL}/viewall/events`)
             .then(response => {
                 setEvents(response.data);
                 console.log(response.data)
@@ -29,7 +29,7 @@ function LibraryViewEvents() {
 
         try {
 
-            axios.get(`http://localhost:4059/deleteevents/id?id=${id}`);
+            axios.get(`${import.meta.env.VITE_API_URL}/deleteevents/id?id=${id}`);
 
             setEvents(prev => prev.filter(event => event._id !== id));
         } catch (err) {
@@ -53,7 +53,7 @@ function LibraryViewEvents() {
         )
     } */}
             {
-                !isUserLoggedIn && !isAdminLogged &&(
+                !isUserLoggedIn && !isAdminLogged && (
                     <Link to='/library-events'>
                         <button className='btn btn-success btn-lg mb-3'>Add Event</button>
                     </Link>
@@ -98,7 +98,7 @@ function LibraryViewEvents() {
                                 <td>{event.libraryId?.contact || 'N/A'}</td>
                                 <td>{event.libraryId?.email || 'N/A'}</td>
                                 <td>
-                              {event.venue || "NA"}
+                                    {event.venue || "NA"}
                                 </td>
                                 {
                                     !isUserLoggedIn && !isAdminLogged && (

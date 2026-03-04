@@ -80,7 +80,7 @@ function App() {
 
 
   return (
-    <BrowserRouter basename="/book_swap">
+    <BrowserRouter basename="/">
       <div>
         <Routes>
 

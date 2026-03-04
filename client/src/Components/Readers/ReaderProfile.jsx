@@ -11,8 +11,8 @@ import ReaderEditProfile from './ReaderEditProfile';
 
 function ReaderProfile({ data }) {
 
-   //local
-   const url='http://localhost:4059'
+  //local
+  const url = import.meta.env.VITE_API_URL
 
   return (
     <div style={{ display: "flex", justifyContent: "space-between" }} className='container'>
@@ -23,15 +23,15 @@ function ReaderProfile({ data }) {
         <ReaderProfileNotification />
       ) : data === "club" ? (
         <ReaderProfileClub url={url} />
-      ): data === "donation" ? (
+      ) : data === "donation" ? (
         <ReaderProfileDonation url={url} />
-      ):data === "help" ? (
+      ) : data === "help" ? (
         <ReaderProfileHelp />
-      ): data === "privacy" ? (
+      ) : data === "privacy" ? (
         <ReaderProfilePrivacy />
-      ): data === "edit" ? (
+      ) : data === "edit" ? (
         <ReaderEditProfile url={url} />
-      ):''}
+      ) : ''}
     </div>
   );
 }

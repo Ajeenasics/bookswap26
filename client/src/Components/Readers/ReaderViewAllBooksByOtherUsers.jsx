@@ -56,7 +56,7 @@ function ReaderViewAllBooksByOtherUsers() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button className="btn btn-primary" type="button" onClick={() => {}}>
+                <button className="btn btn-primary" type="button" onClick={() => { }}>
                     Search
                 </button>
             </form>
@@ -67,7 +67,7 @@ function ReaderViewAllBooksByOtherUsers() {
                         <div className="col-md-4 mb-4" key={book._id}>
                             <div className="card h-100">
                                 <img
-                                    src={`http://localhost:4059/${book.image}`}
+                                    src={`${import.meta.env.VITE_API_URL}/${book.image}`}
                                     alt={book.bookname}
                                     className="card-img-top"
                                     style={{ height: '200px', objectFit: 'cover' }}

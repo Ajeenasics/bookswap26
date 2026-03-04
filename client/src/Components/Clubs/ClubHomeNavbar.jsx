@@ -6,12 +6,12 @@ import "./club.css";
 import axiosInstance from '../../BaseUrl';
 
 function ClubHomeNavbar() {
-  const url = 'http://localhost:4059';
+  const url = import.meta.env.VITE_API_URL;
   const [data, setData] = useState({ image: { filename: '' } });
-  const id = localStorage.getItem("libraryid"); 
+  const id = localStorage.getItem("libraryid");
 
   useEffect(() => {
-    axiosInstance.get(`/viewalibrary/${id}`)  
+    axiosInstance.get(`/viewalibrary/${id}`)
       .then((result) => {
         setData(result.data.data);
         console.log(result.data.data);
@@ -51,13 +51,13 @@ function ClubHomeNavbar() {
                     <li className="nav-item">
                       <Link to="/library_view_books" className="nav-link active" id="navheaders">BOOK</Link>
                     </li>
-                     <li className="nav-item">
+                    <li className="nav-item">
                       <Link to="/library-view-events" className="nav-link active" id="navheaders">EVENTS</Link>
                     </li>
                     <li className="nav-item">
                       <Link to="/library_view_members" className="nav-link" id="navheaders">MEMBERS</Link>
                     </li>
-                     <li className="nav-item">
+                    <li className="nav-item">
                       <Link to="/library-lended-books" className="nav-link" id="navheaders">LENDED BOOKS</Link>
                     </li>
                     <li className="nav-item">
@@ -76,12 +76,12 @@ function ClubHomeNavbar() {
                           style={{ borderRadius: "50%", objectFit: "cover" }}
                         /> */}
                         <img
-  src={data?.image?.filename ? `${url}/${data.image.filename}` : logo}
-  alt="Library"
-  width="30"
-  height="30"
-  style={{ borderRadius: "50%", objectFit: "cover" }}
-/>
+                          src={data?.image?.filename ? `${url}/${data.image.filename}` : logo}
+                          alt="Library"
+                          width="30"
+                          height="30"
+                          style={{ borderRadius: "50%", objectFit: "cover" }}
+                        />
 
                       </Link>
                     </li>

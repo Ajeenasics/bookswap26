@@ -10,7 +10,7 @@ import axiosInstance from "../../BaseUrl";
 function ReaderHomeNavbar() {
 
   //local
-  const url = 'http://localhost:4059'
+  const url = import.meta.env.VITE_API_URL
 
   const [showWishlistModal, setShowWishlistModal] = useState(false);
   const [data, setData] = useState({ dob: '', image: { filename: '' } })

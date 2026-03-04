@@ -38,7 +38,7 @@ const handleSubmit = async (e) => {
   };
 
   try {
-    const response = await fetch('http://localhost:4059/add/events', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/add/events`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

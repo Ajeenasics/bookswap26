@@ -15,7 +15,7 @@ function ReaderViewBooksDetailedPage() {
 
   const fetchRecommendations = async (author) => {
     try {
-      const response = await axiosInstance.post("http://localhost:4059/recommend", {
+      const response = await axiosInstance.post("/recommend", {
         type: "author",
         query: author,
         top_k: 5
