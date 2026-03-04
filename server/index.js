@@ -70,7 +70,12 @@ app.post('/recommend', (req, res) => {
 const route = require('./routes')
 app.use('/', route)
 
+// Export the app for Vercel
+module.exports = app;
+
 const PORT = process.env.PORT || 4059;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
