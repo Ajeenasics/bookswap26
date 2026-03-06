@@ -8,7 +8,7 @@ const userSchema = require("../User/userSchema");
 
 const storage = multer.diskStorage({
   destination: function (req, res, cb) {
-    cb(null, "./upload");
+    cb(null, process.env.NODE_ENV === 'production' ? '/tmp' : './upload');
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -29,7 +29,7 @@ const testMail = (userEmail) => {
     to: userEmail,
     subject: "User Verification By BookShop",
     text: `Please use the Link to Reset Your Password on BookShop.com \n
-    Link : http://localhost:3000/library_forgotpswdafter?id=${userEmail}`,
+    Link : ${process.env.FRONTEND_URL || 'http://localhost:3000'}/library_forgotpswdafter?id=${userEmail}`,
   };
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
@@ -278,4 +278,4 @@ module.exports = {
   libraryForgotPassword,
   libraryNotification,
 };
-  // libraryForgotPasswordReq,
+// libraryForgotPasswordReq,

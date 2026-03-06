@@ -80,23 +80,18 @@ function ReaderSignin() {
 
   const handleValidationBeforeSubmit = async (e) => {
     e.preventDefault();
-    Object.keys(values).forEach((field) => setFieldTouched(field, true));
-    
-    // Custom Validation for Pincode (must be 6 digits)
-    if (!/^\d{6}$/.test(values.pincode)) {
-      setFieldValue("pincode", "Pincode must be exactly 6 digits.");
-    }
-    // Custom Validation for Mobile (must be 10 digits)
-    if (!/^\d{10}$/.test(values.mobile)) {
-      setFieldValue("mobile", "Mobile number must be exactly 10 digits.");
-    }
 
     // Validate Form
     const validationErrors = await validateForm();
 
+    // Set all fields as touched to show errors
+    Object.keys(values).forEach((field) => setFieldTouched(field, true));
+
     // Check if there are validation errors
     if (Object.keys(validationErrors).length === 0) {
       handleSubmit();
+    } else {
+      toast.error("Please fix the errors in the form before submitting.");
     }
   };
 
@@ -307,10 +302,10 @@ function ReaderSignin() {
                     onBlur={handleBlur}
                   >
                     <option value="">Select Nationality</option>
-                    {[ 
-                      "Canada", "United Kingdom", "Australia", "India", 
-                      "France", "Germany", "Japan", "China", "Brazil", 
-                      "Mexico", "Spain", "Italy", "Russia", "Saudi Arabia", 
+                    {[
+                      "Canada", "United Kingdom", "Australia", "India",
+                      "France", "Germany", "Japan", "China", "Brazil",
+                      "Mexico", "Spain", "Italy", "Russia", "Saudi Arabia",
                       "South Africa"
                     ].map((country) => (
                       <option value={country} key={country}>

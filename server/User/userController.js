@@ -3,11 +3,11 @@ const userSchema = require("./userSchema");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
-const nodemailer=require('nodemailer')
+const nodemailer = require('nodemailer')
 
 const storage = multer.diskStorage({
   destination: function (req, res, cb) {
-    cb(null, "./upload");
+    cb(null, process.env.NODE_ENV === 'production' ? '/tmp' : './upload');
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -33,7 +33,7 @@ const testMail = (userEmail) => {
     text: `Please use the Link to Reset Your Password on BookShop.com \n
      
    \n
-    Link : http://localhost:3000/reader_forgotpswdafter?id=${userEmail}`
+    Link : ${process.env.FRONTEND_URL || 'http://localhost:3000'}/reader_forgotpswdafter?id=${userEmail}`
 
   };
 
@@ -79,19 +79,21 @@ const adduser = (req, res) => {
       });
     })
     .catch((err) => {
-      if(err.code==11000){
+      if (err.code == 11000) {
         res.json({
           status: 409,
           msg: "Email Id Already Registered",
-          
+
         });
       }
-      else{
-      console.log(err);
-      res.json({
-        status: 500,
-        msg: "error",
-      });}
+      else {
+        console.log(err);
+        res.json({
+          status: 500,
+          msg: "error",
+          error: err.message
+        });
+      }
     });
 };
 // Forgot Pwd req done by radhul Ram
@@ -152,10 +154,11 @@ const forgotPassword = (req, res) => {
             });
           })
           .catch((err) => {
+            console.error("Forgot password update error:", err);
             res.json({
               status: 500,
               msg: "Data not Updated",
-              Error: err,
+              error: err.message,
             });
           });
       }
@@ -184,9 +187,9 @@ function verifyToken(req, res, next) {
     }
   });
 }
-const userLogin = async (req,res) => {
+const userLogin = async (req, res) => {
   console.log(req.body);
-  
+
   try {
     const { email, password } = req.body;
     const user = await userSchema.findOne({ email: email });
@@ -198,7 +201,7 @@ const userLogin = async (req,res) => {
           "secret_key",
           { expiresIn: 86400 }
         );
-        return res.status(200).json({ message: "Login successful", token ,id:user._id});
+        return res.status(200).json({ message: "Login successful", token, id: user._id });
       } else {
         return res.status(401).json({ message: "Password is incorrect" });
       }
@@ -263,28 +266,28 @@ const editUserById = (req, res) => {
     })
 }
 
-const viewAllUsers=(req,res)=>{
+const viewAllUsers = (req, res) => {
   userSchema.find({}).exec()
-  .then(data=>{
-    if(data.length>0){
-    res.json({
-        status:200,
-        msg:"Data obtained successfully",
-        data:data
+    .then(data => {
+      if (data.length > 0) {
+        res.json({
+          status: 200,
+          msg: "Data obtained successfully",
+          data: data
+        })
+      } else {
+        res.json({
+          status: 200,
+          msg: "No Data obtained "
+        })
+      }
+    }).catch(err => {
+      res.json({
+        status: 500,
+        msg: "Data not Inserted",
+        Error: err
+      })
     })
-  }else{
-    res.json({
-      status:200,
-      msg:"No Data obtained "
-  })
-  }
-}).catch(err=>{
-    res.json({
-        status:500,
-        msg:"Data not Inserted",
-        Error:err
-    })
-})
 
 }
 
@@ -318,4 +321,4 @@ module.exports = {
   viewAllUsers,
   deleteUser
 };
-  // forgotPasswordreq,
+// forgotPasswordreq,

@@ -14,11 +14,8 @@ app.use(express.static(`${__dirname}/upload`));
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-const allowedOrigin = process.env.FRONTEND_URL || '*';
-app.use(cors({
-    origin: allowedOrigin,
-    credentials: true
-}))
+// const allowedOrigin = process.env.FRONTEND_URL || '*';
+app.use(cors())
 
 app.post('/recommend', (req, res) => {
     const inputData = req.body;
