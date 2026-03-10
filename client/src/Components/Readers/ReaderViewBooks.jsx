@@ -101,7 +101,7 @@ function ReaderViewBooks({ url }) {
                   <div className="card admin-books" id="carddesign">
                     <div className="reader-book-top-section">
                       <img
-                        src={a.img}
+                        src={a.img && a.img.startsWith('http') ? a.img : `${url}/${a.img}`}
                         className="card-img-top"
                         id="adminclub"
                         alt="..."

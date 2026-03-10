@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../BaseUrl";
 
-function ReaderViewBooksDetailedPage() {
+function ReaderViewBooksDetailedPage({ url }) {
   const { state } = useLocation();
   const book = state?.book;
   const [recommendations, setRecommendations] = useState([]);
@@ -33,7 +33,11 @@ function ReaderViewBooksDetailedPage() {
   return (
     <div className="container mt-4">
       <h2>{book.title}</h2>
-      <img src={book.img} alt="cover" style={{ width: "200px" }} />
+      <img
+        src={book.img && book.img.startsWith('http') ? book.img : `${url}/${book.img}`}
+        alt="cover"
+        style={{ width: "200px" }}
+      />
       <p><strong>Author:</strong> {book.author}</p>
 
       <h3 className="mt-4">Also read books written by {book.author}</h3>
@@ -43,7 +47,7 @@ function ReaderViewBooksDetailedPage() {
           <div key={index} className="col-md-3 mb-4">
             <div className="card h-100">
               <img
-                src={rec.img}
+                src={rec.img && rec.img.startsWith('http') ? rec.img : `${url}/${rec.img}`}
                 className="card-img-top"
                 alt={rec.title}
                 style={{ height: "300px", objectFit: "cover" }}

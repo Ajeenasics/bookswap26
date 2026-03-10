@@ -57,7 +57,11 @@ const loadAdminBookData = async (req, res) => {
 
     const formattedBooks = books.map((book) => ({
       ...book,
+      title: book.title || book.bookname,
+      author: book.author || book.authername,
+      img: book.img || book.image,
       date: new Date(),
+      count: book.count || 1,
     }));
 
     await adminaddbookschema.insertMany(formattedBooks);
@@ -264,11 +268,11 @@ const admineditbook = (req, res) => {
     .findByIdAndUpdate(
       { _id: req.params.id },
       {
-        bookname: req.body.bookname,
-        authername: req.body.authername,
+        title: req.body.bookname || req.body.title,
+        author: req.body.authername || req.body.author,
         publisher: req.body.publisher,
         publisheryear: req.body.publisheryear,
-        image: req.file.filename,
+        img: req.file ? req.file.filename : req.body.img,
       }
     )
     .exec()

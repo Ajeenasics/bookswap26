@@ -67,8 +67,12 @@ function ReaderViewAllBooksByOtherUsers() {
                         <div className="col-md-4 mb-4" key={book._id}>
                             <div className="card h-100">
                                 <img
-                                    src={`${import.meta.env.VITE_API_URL}/${book.image}`}
-                                    alt={book.bookname}
+                                    src={
+                                        (book.img || book.image) && (book.img || book.image).toString().startsWith('http')
+                                            ? (book.img || book.image)
+                                            : `${import.meta.env.VITE_API_URL}/${book.img || book.image}`
+                                    }
+                                    alt={book.title || book.bookname}
                                     className="card-img-top"
                                     style={{ height: '200px', objectFit: 'cover' }}
                                     onError={(e) => {
@@ -77,12 +81,12 @@ function ReaderViewAllBooksByOtherUsers() {
                                     }}
                                 />
                                 <div className="card-body">
-                                    <h5 className="card-title">{book.bookname}</h5>
-                                    <p className="card-text"><strong>Author:</strong> {book.authername}</p>
+                                    <h5 className="card-title">{book.title || book.bookname}</h5>
+                                    <p className="card-text"><strong>Author:</strong> {book.author || book.authername}</p>
                                     <p className="card-text"><strong>Publisher:</strong> {book.publisher}</p>
                                     <p className="card-text"><strong>Year:</strong> {book.publisheryear}</p>
-                                    <p className='card-text'><strong>Email: </strong>{book.userid.email}</p>
-                                    <p className='card-text'><strong>Contact: </strong>{book.userid.mobile}</p>
+                                    <p className='card-text'><strong>Email: </strong>{book.userid?.email}</p>
+                                    <p className='card-text'><strong>Contact: </strong>{book.userid?.mobile}</p>
                                 </div>
                                 <button
                                     className='btn btn-primary'

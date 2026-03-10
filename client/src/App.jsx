@@ -142,7 +142,7 @@ function App() {
           <Route path="/reader_view_clubs" element={<><ReaderHomeNavbar /><ReaderViewClubs url={url} /></>} />
           <Route path="/reader_view_lended_books" element={<><ReaderHomeNavbar /><ReaderViewLendedBooks url={url} /></>} />
           <Route path="/reader_return_book/:lendid/:bid" element={<><ReaderReturnBook url={url} /></>} />
-          <Route path="/book-details/:id" element={<><ReaderHomeNavbar></ReaderHomeNavbar><ReaderViewBooksDetailedPage /></>}></Route>
+          <Route path="/book-details/:id" element={<><ReaderHomeNavbar></ReaderHomeNavbar><ReaderViewBooksDetailedPage url={url} /></>}></Route>
           <Route path="/chat" element={<>
             <ReaderHomeNavbar />
             <ChatBot />

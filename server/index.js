@@ -10,7 +10,8 @@ const jwt = require('jsonwebtoken')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
-app.use(express.static(`${__dirname}/upload`));
+const path = require("path");
+app.use(express.static(path.join(__dirname, "upload")));
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())

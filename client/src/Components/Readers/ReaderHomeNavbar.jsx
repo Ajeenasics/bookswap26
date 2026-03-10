@@ -177,7 +177,12 @@ function ReaderHomeNavbar() {
                         className="nav-link"
                         href="#!"
                       >
-                        <img src={`${url}/${data.image.filename}`} alt="img" className="readerimg"></img>
+                        <img
+                          src={data?.image?.filename ? `${url}/${data.image.filename}` : logo}
+                          alt="img"
+                          className="readerimg"
+                          onError={(e) => { e.target.src = logo }}
+                        />
                       </Link>
                     </li>
                   </ul>

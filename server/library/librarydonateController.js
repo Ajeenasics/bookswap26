@@ -67,7 +67,7 @@ const addBookToLibrary = (req, res) => {
     image: image,
     bookpdf: bookpdf,
   });
- donation
+  donation
     .save()
     .then((response) => {
       res.json({
@@ -302,19 +302,17 @@ const getLendedBooksByAdmin = (req, res) => {
 
 const editLibraryBook = (req, res) => {
   const bookId = req.params.bookid;
-  console.log(req.body, "book");
 
-  // If new image uploaded, use it. Otherwise keep the old one.
   const updatedData = {
-    bookname: req.body.bookname,
-    authername: req.body.authername,
+    title: req.body.bookname || req.body.title,
+    author: req.body.authername || req.body.author,
     publisher: req.body.publisher,
     publisheryear: req.body.publisheryear,
     count: req.body.count,
   };
 
   if (req.file) {
-    updatedData.image = req.file.filename;
+    updatedData.img = req.file.filename;
   }
 
   libraryDonateSchema
