@@ -3,11 +3,13 @@ import "../../Clubs/ClubSignin.css";
 import "../../Library/LibraryRegister/LibraryRegister.css"
 import img from "../../../Assets/Rectangle 141 (1) (1).png";
 import { Link, useNavigate } from "react-router-dom";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 import axiosInstance from "../../../BaseUrl";
 // import { toast } from "react-toastify";
 
 function LibraryRegister() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     libraryname: "",
@@ -144,15 +146,28 @@ function LibraryRegister() {
                   { name: "state", placeholder: "State" },
                   { name: "pincode", placeholder: "Pincode" },
                 ].map((field) => (
-                  <div key={field.name} className="col-12 pb-3 reader_signin_inputs">
-                    <input
-                      type={field.type || "text"}
-                      name={field.name}
-                      placeholder={field.placeholder}
-                      value={formData[field.name]}
-                      onChange={handleChange}
-                      className="form-control"
-                    />
+                  <div key={field.name} className="col-12 pb-3 position-relative">
+                    <div className="form-floating">
+                      <input
+                        type={field.name === "password" ? (showPassword ? "text" : "password") : field.type || "text"}
+                        name={field.name}
+                        id={field.name}
+                        placeholder={field.placeholder}
+                        value={formData[field.name]}
+                        onChange={handleChange}
+                        className="form-control"
+                        style={{ paddingRight: field.name === "password" ? "40px" : undefined, height: "58px", borderRadius: "7px" }}
+                      />
+                      <label htmlFor={field.name}>{field.placeholder}</label>
+                    </div>
+                    {field.name === "password" && (
+                      <span 
+                         onClick={() => setShowPassword(!showPassword)}
+                         style={{ position: "absolute", right: "25px", top: "20px", cursor: "pointer", zIndex: 10 }}
+                      >
+                        {showPassword ? <BsEye /> : <BsEyeSlash />}
+                      </span>
+                    )}
                     {errors[field.name] && (
                       <small className="error-text">{errors[field.name]}</small>
                     )}

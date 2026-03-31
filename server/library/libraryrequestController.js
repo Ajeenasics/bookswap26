@@ -135,7 +135,7 @@ const deleteLibraryMember = async (req, res) => {
 
 // Get all accepted libraries for a user
 const getAcceptedLibrariesForUser = async (req, res) => {
-  console.log(req.params.userId);
+  // console.log(req.params.userId);
   
   const { userId } = req.params;
 

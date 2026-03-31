@@ -88,7 +88,7 @@ const rejectExchangeIdRequest = async (req, res) => {
 
   try {
     const request = await userexchangeschema.findById(exchangeId);
-    console.log(request, "request");
+    // console.log(request, "request");
 
     if (!request) {
       return res.status(404).json({ message: "Request not found" });

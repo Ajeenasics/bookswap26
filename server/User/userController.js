@@ -72,7 +72,7 @@ const adduser = (req, res) => {
   user
     .save()
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       res.json({
         status: 200,
         msg: "saved",
@@ -132,7 +132,7 @@ const forgotPassword = (req, res) => {
     .exec()
 
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       if (data == null) {
         res.json({
           status: 500,
@@ -168,7 +168,7 @@ const forgotPassword = (req, res) => {
 function verifyToken(req, res, next) {
   let authHeader = req.headers.authorization;
 
-  console.log("Auth Header:", authHeader);
+  // console.log("Auth Header:", authHeader);
 
   if (authHeader === undefined) {
     next();
@@ -176,11 +176,11 @@ function verifyToken(req, res, next) {
 
   let token = authHeader.split(" ")[1];
 
-  console.log("Token:", token);
+  // console.log("Token:", token);
 
   jwt.verify(token, "secret_key", function (err, decoded) {
     if (err) {
-      console.log("Token Verification Error:", err);
+      // console.log("Token Verification Error:", err);
       return res.status(500).send({ error: "Authorization failed" });
     } else {
       next();
@@ -188,7 +188,7 @@ function verifyToken(req, res, next) {
   });
 }
 const userLogin = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
 
   try {
     const { email, password } = req.body;
@@ -220,7 +220,7 @@ const viewUserById = (req, res) => {
     .exec()
     .then((data) => {
       emps = data;
-      console.log(data);
+      // console.log(data);
       res.json({
         status: 200,
         msg: "Data obtained successfully",

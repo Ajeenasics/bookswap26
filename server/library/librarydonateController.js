@@ -20,7 +20,6 @@ const upload = multer({ storage: storage }).fields([
 ]);
 
 // const addBookToLibrary = (req, res) => {
-//   console.log(req.body.libraryid);
 //   let image = req.file;
 //   let bookpdf = req.file;
 //   let donation = new libraryDonateSchema({
@@ -77,7 +76,7 @@ const addBookToLibrary = (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({
         status: 500,
         msg: "Error saving book donation",
@@ -163,76 +162,69 @@ const viewAllDonatedBooksByAdmin = (req, res) => {
     });
 };
 
-const lendBookFromLibrary = (req, res) => {
+const lendBookFromLibrary = async (req, res) => {
   const bookId = req.params.bookid;
   const { userId, returnDate } = req.body;
 
-  libraryDonateSchema
-    .findById(bookId)
-    .then((book) => {
-      if (!book) {
-        return res.json({ status: 404, msg: "Book not found" });
-      }
-      if (book.isLent) {
-        return res.json({ status: 400, msg: "Book is already lent" });
-      }
+  try {
+    const book = await libraryDonateSchema.findById(bookId);
+    if (!book) {
+      return res.json({ status: 404, msg: "Book not found" });
+    }
+    if (book.isLent) {
+      return res.json({ status: 400, msg: "Book is already lent" });
+    }
 
-      book.isLent = true;
-      book.lentTo = userId;
-      book.lentDate = new Date();
-      book.returnDate = returnDate ? new Date(returnDate) : null;
+    book.isLent = true;
+    book.lentTo = userId;
+    book.lentDate = new Date();
+    book.returnDate = returnDate ? new Date(returnDate) : null;
 
-      return book.save();
-    })
-    .then((updatedBook) => {
-      res.json({
-        status: 200,
-        msg: "Book lent successfully",
-        data: updatedBook,
-      });
-    })
-    .catch((err) => {
-      res.json({
-        status: 500,
-        msg: "Error lending book",
-        error: err,
-      });
+    const updatedBook = await book.save();
+    return res.json({
+      status: 200,
+      msg: "Book lent successfully",
+      data: updatedBook,
     });
+  } catch (err) {
+    return res.json({
+      status: 500,
+      msg: "Error lending book",
+      error: err,
+    });
+  }
 };
-const returnLibraryBook = (req, res) => {
+
+const returnLibraryBook = async (req, res) => {
   const bookId = req.params.bookid;
 
-  libraryDonateSchema
-    .findById(bookId)
-    .then((book) => {
-      if (!book || !book.isLent) {
-        return res.json({
-          status: 400,
-          msg: "Book is not lent or doesn't exist",
-        });
-      }
-
-      book.isLent = false;
-      book.lentTo = null;
-      book.lentDate = null;
-      book.returnDate = null;
-
-      return book.save();
-    })
-    .then((updatedBook) => {
-      res.json({
-        status: 200,
-        msg: "Book returned successfully",
-        data: updatedBook,
+  try {
+    const book = await libraryDonateSchema.findById(bookId);
+    if (!book || !book.isLent) {
+      return res.json({
+        status: 400,
+        msg: "Book is not lent or doesn't exist",
       });
-    })
-    .catch((err) => {
-      res.json({
-        status: 500,
-        msg: "Error returning book",
-        error: err,
-      });
+    }
+
+    book.isLent = false;
+    book.lentTo = null;
+    book.lentDate = null;
+    book.returnDate = null;
+
+    const updatedBook = await book.save();
+    return res.json({
+      status: 200,
+      msg: "Book returned successfully",
+      data: updatedBook,
     });
+  } catch (err) {
+    return res.json({
+      status: 500,
+      msg: "Error returning book",
+      error: err,
+    });
+  }
 };
 
 const getLendedBooksByUser = (req, res) => {

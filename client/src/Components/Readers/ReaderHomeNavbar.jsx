@@ -158,7 +158,7 @@ function ReaderHomeNavbar() {
                     </li> */}
                     <li className="nav-item">
                       <Link to="/reader_view_lended_books" className="nav-link" href="#!" id="navheaders">
-                        MY BOOKS
+                       LENDED BOOKS
                       </Link>
                     </li>
                     {/* <li className="nav-item">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import loginimage from "../../Assets/Rectangle 142 (2).png";
 import "./reader.css";
-import { BsArrowClockwise } from "react-icons/bs";
+import { BsArrowClockwise, BsEye, BsEyeSlash } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../BaseUrl";
 import { toast } from "react-toastify";
@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 function ReaderLoginpage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [captchaText, setCaptchaText] = useState("");
   const [userCaptchaInput, setUserCaptchaInput] = useState("");
 
@@ -122,16 +123,22 @@ function ReaderLoginpage() {
                 />
                 <label htmlhtmlFor="floatingInput">Email address</label>
               </div>
-              <div className="form-floating">
+              <div className="form-floating position-relative">
                 <input
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   className="form-control"
                   id="floatingPassword"
                   placeholder="Password"
                 />
                 <label htmlhtmlFor="floatingPassword">Password</label>
+                <span 
+                   onClick={() => setShowPassword(!showPassword)}
+                   style={{ position: "absolute", right: "15px", top: "18px", cursor: "pointer", zIndex: 10 }}
+                >
+                  {showPassword ? <BsEye /> : <BsEyeSlash />}
+                </span>
               </div>
               <div className="d-flex justify-content-end align-items-center m-2">
                 <Link to="/reader_forgotpswd" className="forgot-password">

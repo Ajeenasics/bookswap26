@@ -4,7 +4,7 @@ const libraryEventSchema = new mongoose.Schema({
   libraryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "libraries",
-    required: true
+    required: false
   },
   eventName: {
     type: String,

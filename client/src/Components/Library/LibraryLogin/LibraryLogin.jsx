@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import img from "../../../Assets/clublogin.png"
 import  "../../Clubs/ClubLogin.css"
 import { Link, useNavigate } from "react-router-dom";
-import { BsArrowClockwise } from "react-icons/bs";
+import { BsArrowClockwise, BsEye, BsEyeSlash } from "react-icons/bs";
 import axiosInstance from "../../../BaseUrl";
 import { toast } from "react-toastify";
 
@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 function LibraryLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [captchaText, setCaptchaText] = useState("");
   const [userCaptchaInput, setUserCaptchaInput] = useState("");
 
@@ -92,12 +93,21 @@ function LibraryLogin() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <div className="position-relative d-inline-block">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        style={{ paddingRight: "40px" }}
+                      />
+                      <span 
+                         onClick={() => setShowPassword(!showPassword)}
+                         style={{ position: "absolute", right: "15px", top: "20px", cursor: "pointer", zIndex: 10 }}
+                      >
+                        {showPassword ? <BsEye /> : <BsEyeSlash />}
+                      </span>
+                    </div>
                   </div>
                   <div className="col-12 club_login_forgotpass mt-3">
                     <Link to="/library-forgotpassword">Forgot Password?</Link>

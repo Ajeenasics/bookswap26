@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import "../Readers/ReaderSignin.css";
 import img from "../../Assets/Signin.png";
 import { Link, useNavigate } from "react-router-dom";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 import axiosInstance from "../../BaseUrl";
 import { readerRegSchema } from "../../Schema";
 import { useFormik } from "formik";
@@ -9,6 +10,8 @@ import { toast } from "react-toastify";
 
 function ReaderSignin() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     values,
@@ -108,14 +111,20 @@ function ReaderSignin() {
               <div className="row">
                 {/* First Name */}
                 <div className="col-6 pb-3 reader_signin_inputs">
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    name="firstname"
-                    value={values.firstname}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="firstname"
+                      placeholder="First Name"
+                      name="firstname"
+                      value={values.firstname}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="firstname">First Name</label>
+                  </div>
                   {errors.firstname && touched.firstname && (
                     <p className="error">{errors.firstname}</p>
                   )}
@@ -123,14 +132,20 @@ function ReaderSignin() {
 
                 {/* Last Name */}
                 <div className="col-6 pb-3 reader_signin_inputs">
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    name="lastname"
-                    value={values.lastname}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="lastname"
+                      placeholder="Last Name"
+                      name="lastname"
+                      value={values.lastname}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="lastname">Last Name</label>
+                  </div>
                   {errors.lastname && touched.lastname && (
                     <p className="error">{errors.lastname}</p>
                   )}
@@ -138,44 +153,74 @@ function ReaderSignin() {
 
                 {/* Email */}
                 <div className="col-12 pb-3 reader_signin_inputs">
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      placeholder="Email"
+                      name="email"
+                      value={values.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="email">Email</label>
+                  </div>
                   {errors.email && touched.email && (
                     <p className="error">{errors.email}</p>
                   )}
                 </div>
 
                 {/* Password */}
-                <div className="col-12 pb-3 reader_signin_inputs">
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                <div className="col-12 pb-3 reader_signin_inputs position-relative">
+                  <div className="form-floating">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control"
+                      id="password"
+                      placeholder="Password"
+                      name="password"
+                      value={values.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ paddingRight: "40px", height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="password">Password</label>
+                  </div>
+                  <span 
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ position: "absolute", right: "25px", top: "20px", cursor: "pointer", zIndex: 10 }}
+                  >
+                    {showPassword ? <BsEye /> : <BsEyeSlash />}
+                  </span>
                   {errors.password && touched.password && (
                     <p className="error">{errors.password}</p>
                   )}
                 </div>
 
                 {/* Confirm Password */}
-                <div className="col-12 pb-3 reader_signin_inputs">
-                  <input
-                    type="password"
-                    placeholder="Confirm Password"
-                    name="confirmpassword"
-                    value={values.confirmpassword}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                <div className="col-12 pb-3 reader_signin_inputs position-relative">
+                  <div className="form-floating">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      className="form-control"
+                      id="confirmpassword"
+                      placeholder="Confirm Password"
+                      name="confirmpassword"
+                      value={values.confirmpassword}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ paddingRight: "40px", height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="confirmpassword">Confirm Password</label>
+                  </div>
+                  <span 
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={{ position: "absolute", right: "25px", top: "20px", cursor: "pointer", zIndex: 10 }}
+                  >
+                    {showConfirmPassword ? <BsEye /> : <BsEyeSlash />}
+                  </span>
                   {errors.confirmpassword && touched.confirmpassword && (
                     <p className="error">{errors.confirmpassword}</p>
                   )}
@@ -183,14 +228,19 @@ function ReaderSignin() {
 
                 {/* DOB */}
                 <div className="col-12 pb-3 reader_signin_inputs w-50">
-                  <label className="pb-3">Date of Birth</label>
-                  <input
-                    type="date"
-                    name="dob"
-                    value={values.dob}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="dob"
+                      name="dob"
+                      value={values.dob}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="dob">Date of Birth</label>
+                  </div>
                   {errors.dob && touched.dob && (
                     <p className="error">{errors.dob}</p>
                   )}
@@ -224,70 +274,100 @@ function ReaderSignin() {
 
                 {/* Address */}
                 <div className="col-12 pb-3 reader_signin_inputs">
-                  <input
-                    type="text"
-                    placeholder="Street"
-                    name="street"
-                    value={values.street}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="street"
+                      placeholder="Street"
+                      name="street"
+                      value={values.street}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="street">Street</label>
+                  </div>
                   {errors.street && touched.street && (
                     <p className="error">{errors.street}</p>
                   )}
                 </div>
 
                 <div className="col-12 pb-3 reader_signin_inputs">
-                  <input
-                    type="text"
-                    placeholder="City"
-                    name="city"
-                    value={values.city}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="city"
+                      placeholder="City"
+                      name="city"
+                      value={values.city}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="city">City</label>
+                  </div>
                   {errors.city && touched.city && (
                     <p className="error">{errors.city}</p>
                   )}
                 </div>
 
                 <div className="col-12 pb-3 reader_signin_inputs">
-                  <input
-                    type="text"
-                    placeholder="State"
-                    name="state"
-                    value={values.state}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="state"
+                      placeholder="State"
+                      name="state"
+                      value={values.state}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="state">State</label>
+                  </div>
                   {errors.state && touched.state && (
                     <p className="error">{errors.state}</p>
                   )}
                 </div>
 
                 <div className="col-6 pb-3 reader_signin_inputs">
-                  <input
-                    type="text"
-                    placeholder="District"
-                    name="district"
-                    value={values.district}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="district"
+                      placeholder="District"
+                      name="district"
+                      value={values.district}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="district">District</label>
+                  </div>
                   {errors.district && touched.district && (
                     <p className="error">{errors.district}</p>
                   )}
                 </div>
 
                 <div className="col-6 pb-3 reader_signin_inputs">
-                  <input
-                    type="number"
-                    placeholder="Pincode"
-                    name="pincode"
-                    value={values.pincode}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="pincode"
+                      placeholder="Pincode"
+                      name="pincode"
+                      value={values.pincode}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="pincode">Pincode</label>
+                  </div>
                   {errors.pincode && touched.pincode && (
                     <p className="error">{errors.pincode}</p>
                   )}
@@ -295,24 +375,30 @@ function ReaderSignin() {
 
                 {/* Nationality */}
                 <div className="col-12 pb-3 reader_signin_inputs w-50">
-                  <select
-                    name="nationality"
-                    value={values.nationality}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  >
-                    <option value="">Select Nationality</option>
-                    {[
-                      "Canada", "United Kingdom", "Australia", "India",
-                      "France", "Germany", "Japan", "China", "Brazil",
-                      "Mexico", "Spain", "Italy", "Russia", "Saudi Arabia",
-                      "South Africa"
-                    ].map((country) => (
-                      <option value={country} key={country}>
-                        {country}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="form-floating">
+                    <select
+                      className="form-select"
+                      id="nationality"
+                      name="nationality"
+                      value={values.nationality}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    >
+                      <option value="">Select Nationality</option>
+                      {[
+                        "Canada", "United Kingdom", "Australia", "India",
+                        "France", "Germany", "Japan", "China", "Brazil",
+                        "Mexico", "Spain", "Italy", "Russia", "Saudi Arabia",
+                        "South Africa"
+                      ].map((country) => (
+                        <option value={country} key={country}>
+                          {country}
+                        </option>
+                      ))}
+                    </select>
+                    <label htmlFor="nationality">Nationality</label>
+                  </div>
                   {errors.nationality && touched.nationality && (
                     <p className="error">{errors.nationality}</p>
                   )}
@@ -320,14 +406,20 @@ function ReaderSignin() {
 
                 {/* Mobile */}
                 <div className="col-12 pb-3 reader_signin_inputs w-50">
-                  <input
-                    type="number"
-                    placeholder="Contact"
-                    name="mobile"
-                    value={values.mobile}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                  <div className="form-floating">
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="mobile"
+                      placeholder="Contact"
+                      name="mobile"
+                      value={values.mobile}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      style={{ height: "58px", borderRadius: "7px" }}
+                    />
+                    <label htmlFor="mobile">Contact</label>
+                  </div>
                   {errors.mobile && touched.mobile && (
                     <p className="error">{errors.mobile}</p>
                   )}

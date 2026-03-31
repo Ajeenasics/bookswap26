@@ -49,10 +49,13 @@ function ClubHomeNavbar() {
                       <Link to="/library_about" className="nav-link" id="navheaders">ABOUT</Link>
                     </li>
                     <li className="nav-item">
-                      <Link to="/library_view_books" className="nav-link active" id="navheaders">BOOK</Link>
+                      <Link to="/library_view_books" className="nav-link active" id="navheaders">MY BOOKS</Link>
                     </li>
                     <li className="nav-item">
                       <Link to="/library-view-events" className="nav-link active" id="navheaders">EVENTS</Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to="/library-events" className="nav-link active" id="navheaders">ADD EVENT</Link>
                     </li>
                     <li className="nav-item">
                       <Link to="/library_view_members" className="nav-link" id="navheaders">MEMBERS</Link>

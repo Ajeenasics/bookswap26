@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import img from "../../../Assets/donateimg.png";
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../../BaseUrl';
 
 function LibraryEvents({url}) {
   const [formData, setFormData] = useState({
@@ -38,15 +39,9 @@ const handleSubmit = async (e) => {
   };
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/add/events`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
+    const response = await axiosInstance.post('/add/events', payload);
 
-    if (response.ok) {
+    if (response.status === 201 || response.status === 200) {
       alert("Event added successfully!");
       navigate("/library-view-events")
       setFormData({
@@ -57,12 +52,11 @@ const handleSubmit = async (e) => {
         venue:""
       });
     } else {
-      const errorData = await response.json();
-      alert("Failed to add event: " + (errorData.message || "Unknown error"));
+      alert("Failed to add event: " + (response.data?.message || "Unknown error"));
     }
   } catch (error) {
     console.error("Error adding event:", error);
-    alert("An error occurred while adding the event.");
+    alert("Failed to add event: " + (error.response?.data?.message || error.message || "Unknown error"));
   }
 };
 
