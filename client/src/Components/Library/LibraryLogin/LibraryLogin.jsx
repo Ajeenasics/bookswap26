@@ -19,6 +19,11 @@ function LibraryLogin() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    if (email.trim() === "") {
+      document.getElementById("alertuser").innerHTML = "Email is required";
+      return;
+    }
+
     const validateEmail = (email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
@@ -30,7 +35,7 @@ function LibraryLogin() {
     }
 
     if (password.trim() === "") {
-      document.getElementById("alertuser").innerHTML = "Password cannot be empty";
+      document.getElementById("alertuser").innerHTML = "Password is required";
       return;
     }
 

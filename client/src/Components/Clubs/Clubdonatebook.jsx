@@ -4,23 +4,53 @@ import axiosInstance from '../../BaseUrl';
 import img from '../../Assets/donateimg.png';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useFormik } from 'formik';
+import { bookSchema } from '../../Schema';
 
-function Readerdonatebook() {
+function Clubdonatebook() {
   const navigate = useNavigate();
   const { id } = useParams(); // Book ID (for edit mode)
   const libraryId = localStorage.getItem("libraryid");
 
-  const [formData, setFormData] = useState({
-    bookname: '',
-    authername: '',
-    publisher: '',
-    publisheryear: '',
-    count: 1,
-    libraryid: libraryId,
-    image: '',
-  });
-
   const [loading, setLoading] = useState(true);
+
+  const formik = useFormik({
+    initialValues: {
+      bookname: '',
+      authername: '',
+      publisher: '',
+      publisheryear: '',
+      count: 1,
+      libraryid: libraryId,
+      image: null,
+      bookpdf: null,
+    },
+    validationSchema: bookSchema,
+    onSubmit: async (values) => {
+      const dataToSend = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        if (value !== null) {
+          dataToSend.append(key, value);
+        }
+      });
+
+      const endpoint = id ? `/library/edit/${id}` : '/addBook';
+
+      try {
+        await axiosInstance.post(endpoint, dataToSend, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        const message = id ? "Book updated successfully" : "Book added successfully";
+        toast.success(message);
+        navigate("/library_view_books");
+      } catch (error) {
+        console.error("Error:", error);
+        toast.error("Operation failed");
+      }
+    },
+  });
 
   // If in edit mode, fetch book data
   useEffect(() => {
@@ -28,71 +58,26 @@ function Readerdonatebook() {
       axiosInstance.get(`/viewBookById/${id}`)
         .then((res) => {
           const book = res.data.data;
-          setFormData({
+          formik.setValues({
             bookname: book.bookname || '',
             authername: book.authername || '',
             publisher: book.publisher || '',
             publisheryear: book.publisheryear || '',
             count: book.count || 1,
             libraryid: libraryId,
-            image: '',
-            bookpdf: "",
+            image: null, // Image usually not pre-filled in edit for file inputs
+            bookpdf: null,
           });
           setLoading(false);
         })
         .catch((err) => {
-          //   toast.error("Failed to fetch book data.");
+          console.error(err);
           setLoading(false);
         });
     } else {
       setLoading(false);
     }
   }, [id, libraryId]);
-
- const handleChange = (e) => {
-  const { name, value, files } = e.target;
-  if (name === "image" || name === "bookpdf") {
-    setFormData({ ...formData, [name]: files[0] }); // ✅ correctly assigns to image or bookpdf
-  } else {
-    setFormData({ ...formData, [name]: value });
-  }
-};
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const dataToSend = new FormData();
-    dataToSend.append('bookname', formData.bookname);
-    dataToSend.append('authername', formData.authername);
-    dataToSend.append('publisher', formData.publisher);
-    dataToSend.append('publisheryear', formData.publisheryear);
-    dataToSend.append('count', formData.count);
-    dataToSend.append('libraryid', formData.libraryid);
-    if (formData.image) {
-      dataToSend.append('image', formData.image);
-    }
-    if (formData.bookpdf) {
-      dataToSend.append('bookpdf', formData.bookpdf);
-    }
-
-    const endpoint = id ? `/library/edit/${id}` : '/addBook';
-
-    axiosInstance.post(endpoint, dataToSend, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((result) => {
-        const message = id ? "Book updated successfully" : "Book donated successfully";
-        toast.success(message);
-        navigate("/library_view_books");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Operation failed");
-      });
-  };
 
   if (loading) return <div>Loading...</div>;
 
@@ -107,37 +92,82 @@ function Readerdonatebook() {
             <p className='reader_donatebooke_heading'>
               {id ? "Edit Book" : "Add Book"}
             </p>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={formik.handleSubmit}>
               <div className='row'>
                 <div className='row align-items-center '>
                   <label className='col-sm-4 donatebook_label'>Book Name</label>
                   <div className='col-sm-8 reader_donatebook_inputs'>
-                    <input type="text" name='bookname' value={formData.bookname} onChange={handleChange} required />
+                    <input 
+                      type="text" 
+                      name='bookname' 
+                      value={formik.values.bookname} 
+                      onChange={formik.handleChange} 
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.bookname && formik.touched.bookname && (
+                      <p className="error text-danger">{formik.errors.bookname}</p>
+                    )}
                   </div>
 
                   <label className='col-sm-4 donatebook_label'>Author Name</label>
                   <div className='col-sm-8 reader_donatebook_inputs'>
-                    <input type="text" name='authername' value={formData.authername} onChange={handleChange} required />
+                    <input 
+                      type="text" 
+                      name='authername' 
+                      value={formik.values.authername} 
+                      onChange={formik.handleChange} 
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.authername && formik.touched.authername && (
+                      <p className="error text-danger">{formik.errors.authername}</p>
+                    )}
                   </div>
 
                   <label className='col-sm-4 donatebook_label'>Publisher</label>
                   <div className='col-sm-8 reader_donatebook_inputs'>
-                    <input type="text" name='publisher' value={formData.publisher} onChange={handleChange} required />
+                    <input 
+                      type="text" 
+                      name='publisher' 
+                      value={formik.values.publisher} 
+                      onChange={formik.handleChange} 
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.publisher && formik.touched.publisher && (
+                      <p className="error text-danger">{formik.errors.publisher}</p>
+                    )}
                   </div>
 
                   <label className='col-sm-4 donatebook_label'>Publishing Year</label>
                   <div className='col-sm-8 reader_donatebook_inputs'>
-                    <input type="number" name='publisheryear' value={formData.publisheryear} onChange={handleChange} required />
+                    <input 
+                      type="number" 
+                      name='publisheryear' 
+                      value={formik.values.publisheryear} 
+                      onChange={formik.handleChange} 
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.publisheryear && formik.touched.publisheryear && (
+                      <p className="error text-danger">{formik.errors.publisheryear}</p>
+                    )}
                   </div>
 
                   <label className='col-sm-4 donatebook_label'>Count</label>
                   <div className='col-sm-8 reader_donatebook_inputs'>
-                    <input type="number" name='count' value={formData.count} onChange={handleChange} required disabled />
+                    <input type="number" name='count' value={formik.values.count} disabled />
                   </div>
 
                   <label className='col-sm-4 donatebook_label'>Select Image</label>
                   <div className='col-sm-8 reader_donatebook_inputs'>
-                    <input type="file" name='image' onChange={handleChange} accept="image/*" required={!id} />
+                    <input 
+                      type="file" 
+                      name='image' 
+                      onChange={(e) => formik.setFieldValue("image", e.currentTarget.files[0])} 
+                      onBlur={formik.handleBlur}
+                      accept="image/*" 
+                    />
+                    {formik.errors.image && formik.touched.image && (
+                      <p className="error text-danger">{formik.errors.image}</p>
+                    )}
                   </div>
                   
                   <label className='col-sm-4 donatebook_label'>Upload Book PDF</label>
@@ -145,21 +175,17 @@ function Readerdonatebook() {
                     <input
                       type="file"
                       name="bookpdf"
-                      onChange={handleChange}
+                      onChange={(e) => formik.setFieldValue("bookpdf", e.currentTarget.files[0])} 
+                      onBlur={formik.handleBlur}
                       accept="application/pdf"
-                      required={!id}
                     />
                   </div>
 
-
                   <div className='col-sm-8 reader_donatebook_inputs'>
-                    <button className="btn btn-primary" id='readerdonatebook_button'>
+                    <button type="submit" className="btn btn-primary" id='readerdonatebook_button'>
                       {id ? "Update" : "Add"}
                     </button>
                   </div>
-
-
-
                 </div>
               </div>
             </form>
@@ -170,4 +196,5 @@ function Readerdonatebook() {
   );
 }
 
-export default Readerdonatebook;
+export default Clubdonatebook;
+

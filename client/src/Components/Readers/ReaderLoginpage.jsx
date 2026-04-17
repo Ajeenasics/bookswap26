@@ -19,6 +19,11 @@ function ReaderLoginpage() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    if (email.trim() === "") {
+      document.getElementById("alertuser").innerHTML = "Email is required";
+      return;
+    }
+
     const validateEmail = (email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailRegex.test(email);
@@ -29,8 +34,8 @@ function ReaderLoginpage() {
         "Please enter a valid email";
       return;
     }
-    if (password === "") {
-      document.getElementById("alertuser").innerHTML = "password is empty";
+    if (password.trim() === "") {
+      document.getElementById("alertuser").innerHTML = "Password is required";
       return;
     }
     try {

@@ -45,7 +45,12 @@ function LibraryRegister() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.libraryname.trim()) newErrors.libraryname = "Library name is required";
+    if (!formData.libraryname.trim()) {
+      newErrors.libraryname = "Library name is required";
+    } else if (formData.libraryname.length <= 3) {
+      newErrors.libraryname = "Library name must be greater than 3 letters";
+    }
+
     if (!formData.street.trim()) newErrors.street = "Street is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.district.trim()) newErrors.district = "District is required";
@@ -69,8 +74,8 @@ function LibraryRegister() {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
-    } else if (!/[A-Z]/.test(formData.password)) {
-      newErrors.password = "Password must contain at least one uppercase letter";
+    } else if (!/[a-zA-Z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one letter";
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
       newErrors.password = "Password must contain at least one special character";
     }

@@ -1,49 +1,46 @@
 import React, { useState } from "react";
-// import AdminHomeNavbar from "./AdminHomeNavbar";
 import addbook from "../../Assets/addbook.png";
 import "./adminaddbook.css";
 import axiosInstance from "../../BaseUrl";
 import { toast } from "react-toastify";
+import { useFormik } from "formik";
+import { bookSchema } from "../../Schema";
 
 function AdminAddBook() {
-  const [addBook, setAddBook] = useState({
-    bookname: "",
-    authername: "",
-    publisher: "",
-    publisheryear: "",
-    count:0,
-    image: "",
-  });
-  const changesubmit = (a) => {
-    if (a.target.name === "image") {
-      setAddBook({ ...addBook, image: a.target.files[0] });
-    } else {
-      setAddBook({ ...addBook, [a.target.name]: a.target.value });
-    }
-  };
-  const submitfn = (b) => {
-    b.preventDefault();
-    console.log(addBook);
-    axiosInstance
-      .post(`/adminaddbook`, addBook, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((result) => {
-        console.log("data entered successfully", result);
+  const formik = useFormik({
+    initialValues: {
+      bookname: "",
+      authername: "",
+      publisher: "",
+      publisheryear: "",
+      count: 0,
+      image: null,
+    },
+    validationSchema: bookSchema,
+    onSubmit: async (values) => {
+      try {
+        const dataToSend = new FormData();
+        for (let key in values) {
+          dataToSend.append(key, values[key]);
+        }
+        const result = await axiosInstance.post(`/adminaddbook`, dataToSend, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
         if (result.status === 200) {
-          toast.success("Book added Sucessfully");
+          toast.success("Book added Successfully");
           window.location.reload();
         } else {
-          toast.error("failed to entered");
+          toast.error("Failed to add book");
         }
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
-  };
-  console.log(addBook);
+      } catch (error) {
+        console.error("error", error);
+        toast.error("Something went wrong");
+      }
+    },
+  });
+
   return (
     <div>
       <div className="admin_addbook">
@@ -59,83 +56,103 @@ function AdminAddBook() {
             </div>
             <div className="col-sm-12 col-md-6 col-lg-6 admin_addbook_col2">
               <p className="admin_addbooke_heading">Book Upload</p>
-              <form onSubmit={submitfn}>
+              <form onSubmit={formik.handleSubmit}>
                 <div className="row">
                   <div className="row align-items-center ">
                     <label className="col-sm-4 addbook_label">Book Name</label>
                     <div className="col-sm-8 admin_addbook_inputs">
                       <input
                         type="text"
-                        placeholder=""
                         name="bookname"
-                        value={addBook.bookname}
-                        onChange={changesubmit}
-                        required
+                        value={formik.values.bookname}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
+                      {formik.errors.bookname && formik.touched.bookname && (
+                        <p className="error text-danger">{formik.errors.bookname}</p>
+                      )}
                     </div>
+
                     <label className="col-sm-4 addbook_label">
                       Author Name
                     </label>
                     <div className="col-sm-8 admin_addbook_inputs">
                       <input
                         type="text"
-                        placeholder=""
                         name="authername"
-                        value={addBook.authername}
-                        onChange={changesubmit}
-                        required
+                        value={formik.values.authername}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
+                      {formik.errors.authername && formik.touched.authername && (
+                        <p className="error text-danger">{formik.errors.authername}</p>
+                      )}
                     </div>
+
                     <label className="col-sm-4 addbook_label">Publisher</label>
                     <div className="col-sm-8 admin_addbook_inputs">
                       <input
                         type="text"
-                        placeholder=""
                         name="publisher"
-                        value={addBook.publisher}
-                        onChange={changesubmit}
-                        required
+                        value={formik.values.publisher}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
+                      {formik.errors.publisher && formik.touched.publisher && (
+                        <p className="error text-danger">{formik.errors.publisher}</p>
+                      )}
                     </div>
+
                     <label className="col-sm-4 addbook_label">
                       Publishing year
                     </label>
                     <div className="col-sm-8 admin_addbook_inputs">
                       <input
                         type="number"
-                        placeholder=""
                         name="publisheryear"
-                        value={addBook.publisheryear}
-                        onChange={changesubmit}
-                        required
+                        value={formik.values.publisheryear}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
+                      {formik.errors.publisheryear && formik.touched.publisheryear && (
+                        <p className="error text-danger">{formik.errors.publisheryear}</p>
+                      )}
                     </div>
+
                     <label className="col-sm-4 addbook_label">
                       Count
                     </label>
                     <div className="col-sm-8 admin_addbook_inputs">
                       <input
                         type="number"
-                        placeholder=""
                         name="count"
-                        onChange={changesubmit}
-                        required
+                        value={formik.values.count}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                       />
+                      {formik.errors.count && formik.touched.count && (
+                        <p className="error text-danger">{formik.errors.count}</p>
+                      )}
                     </div>
+
                     <label className="col-sm-4 addbook_label">
                       Select a Image
                     </label>
                     <div className="col-sm-8 admin_addbook_inputs">
                       <input
                         type="file"
-                        placeholder=""
                         name="image"
-                        onChange={changesubmit}
-                        required
+                        onChange={(e) => formik.setFieldValue("image", e.currentTarget.files[0])}
+                        onBlur={formik.handleBlur}
                       />
+                      {formik.errors.image && formik.touched.image && (
+                        <p className="error text-danger">{formik.errors.image}</p>
+                      )}
                     </div>
+
                     <div className="col-sm-8 admin_addbook_inputs ">
                       <button
+                        type="submit"
                         className="btn btn-primary "
                         id="adminaddbook_button"
                       >
@@ -154,3 +171,4 @@ function AdminAddBook() {
 }
 
 export default AdminAddBook;
+
